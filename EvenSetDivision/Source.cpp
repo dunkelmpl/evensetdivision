@@ -12,11 +12,12 @@ using namespace std;
 class EvenSetDivisionHelper
 {
     typedef enum { FIRST, SECOND } BatchType;
-    typedef vector <vector <int>> IntMatrix;
+    typedef vector <vector <unsigned>> IntMatrix;
 
 public:
-    EvenSetDivisionHelper(vector<int> items) : items(items), calculatedBatchesMap(0) {};
-    EvenSetDivisionHelper(int items[], size_t size) : EvenSetDivisionHelper(vector<int>(items, items + size)) {};
+    EvenSetDivisionHelper(vector<unsigned> items) : items(items), calculatedBatchesMap(0) {};
+    EvenSetDivisionHelper(unsigned items[], size_t size)
+        : EvenSetDivisionHelper(vector<unsigned>(items, items + size)) {};
 
 public:
     void calc();
@@ -27,28 +28,28 @@ protected:
     vector<size_t> getCalculatedBatch(BatchType batchType) const;
 
 private:
-    int getTotalItemsSum();
-    vector<BatchType> buildBatchesMap(int targetSum);
-    IntMatrix buildKnapsackMatrix(int targetSum);
+    unsigned getTotalItemsSum();
+    vector<BatchType> buildBatchesMap(unsigned targetSum);
+    IntMatrix buildKnapsackMatrix(unsigned targetSum);
 
 private:
-    vector<int> items;
+    vector<unsigned> items;
     vector<BatchType>calculatedBatchesMap;
 };
 
 void EvenSetDivisionHelper::calc()
 {
     // Calculating total sum of all items
-    int totalSum = getTotalItemsSum();
+    unsigned totalSum = getTotalItemsSum();
 
     // Target is to get two batches close to half of total sum.
     this->calculatedBatchesMap = this->buildBatchesMap(totalSum >> 1);
 }
 
-int EvenSetDivisionHelper::getTotalItemsSum()
+unsigned EvenSetDivisionHelper::getTotalItemsSum()
 {
-    int totalSum = 0;
-    for (int &item : items) {
+    unsigned totalSum = 0;
+    for (unsigned &item : items) {
         totalSum += item;
     }
 
@@ -61,7 +62,7 @@ int EvenSetDivisionHelper::getTotalItemsSum()
 * Index of every item in the result map corresponds to the index in the
 * source EvenSetDivisionHelper::items vector.
 */
-vector<EvenSetDivisionHelper::BatchType> EvenSetDivisionHelper::buildBatchesMap(int targetSum)
+vector<EvenSetDivisionHelper::BatchType> EvenSetDivisionHelper::buildBatchesMap(unsigned targetSum)
 {
     // Building 0-1 knapsack problem matrix
     IntMatrix matrix = this->buildKnapsackMatrix(targetSum);
@@ -101,12 +102,12 @@ vector<EvenSetDivisionHelper::BatchType> EvenSetDivisionHelper::buildBatchesMap(
  * @see https://en.wikipedia.org/wiki/Knapsack_problem for 0-1 knapsack 
  * problem                                                              
  */
-EvenSetDivisionHelper::IntMatrix EvenSetDivisionHelper::buildKnapsackMatrix(int targetSum)
+EvenSetDivisionHelper::IntMatrix EvenSetDivisionHelper::buildKnapsackMatrix(unsigned targetSum)
 {
     IntMatrix matrix(items.size() + 1, IntMatrix::value_type(targetSum + 1));
 
     for (size_t itemIndex = 0; itemIndex <= items.size(); itemIndex++) {
-        for (int sum = 0; sum <= targetSum; sum++) {
+        for (unsigned sum = 0; sum <= targetSum; sum++) {
             if (itemIndex == 0 || sum == 0) {
                 matrix[itemIndex][sum] = 0;
             }
@@ -157,24 +158,24 @@ int main()
 {
     srand((unsigned)time(nullptr));
 
-    const size_t size = 1000;
+    const size_t size = 10;
     for (int run = 0; run < 100; run++) {
-        vector<int> input(size, 0);
+        vector<unsigned> input(size, 0);
 
         for (size_t ind = 0; ind < size; ind++) {
             input[ind] = (rand() % 200) + 100;
         }
 
-        EvenSetDivisionHelper helper(input);
-        helper.calc();
+         EvenSetDivisionHelper helper(input);
+         helper.calc();
 
         vector<size_t> batch1 = helper.getFirstCalculatedBatch();
         vector<size_t> batch2 = helper.getSecondCalculatedBatch();
 
-        auto printBatch = [&input](vector<size_t> batch, const char* label) -> int {
+        auto printBatch = [&input](vector<size_t> batch, const char* label) -> unsigned {
             cout << label;
 
-            int sum = 0;
+            unsigned sum = 0;
             bool firstItem = true;
             for (auto &itemIndex : batch) {
                 sum += input[itemIndex];
@@ -194,10 +195,10 @@ int main()
             return sum;
         };
 
-        int sum1 = printBatch(batch1, "Batch #1 :");
-        int sum2 = printBatch(batch2, "Batch #2 :");
+        unsigned sum1 = printBatch(batch1, "Batch #1 :");
+        unsigned sum2 = printBatch(batch2, "Batch #2 :");
 
-        cout << "Diff: " << abs(sum1 - sum2) << "\n\n";
+        cout << "Diff: " << abs((long)sum1 - (long)sum2) << "\n\n";
     }
 
     return 0;
