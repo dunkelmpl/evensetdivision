@@ -12,7 +12,7 @@ using namespace std;
 class EvenSetDivisionHelper
 {
     typedef enum { FIRST, SECOND } BatchType;
-    typedef vector <vector <unsigned>> IntMatrix;
+    typedef vector<vector<unsigned>> IntMatrix;
 
 public:
     EvenSetDivisionHelper(vector<unsigned> items) : items(items), calculatedBatchesMap(0) {};
@@ -96,11 +96,11 @@ vector<EvenSetDivisionHelper::BatchType> EvenSetDivisionHelper::buildBatchesMap(
 }
 
 /**
- * Calculates matrix like in 0-1 knapsack problem solution, with the   
+ * Calculates matrix like in 0-1 knapsack problem solution, with the
  * only difference that here weight of an item equals to its value
  *
- * @see https://en.wikipedia.org/wiki/Knapsack_problem for 0-1 knapsack 
- * problem                                                              
+ * @see https://en.wikipedia.org/wiki/Knapsack_problem for 0-1 knapsack
+ * problem
  */
 EvenSetDivisionHelper::IntMatrix EvenSetDivisionHelper::buildKnapsackMatrix(unsigned targetSum)
 {
@@ -166,8 +166,8 @@ int main()
             input[ind] = (rand() % 200) + 100;
         }
 
-         EvenSetDivisionHelper helper(input);
-         helper.calc();
+        EvenSetDivisionHelper helper(input);
+        helper.calc();
 
         vector<size_t> batch1 = helper.getFirstCalculatedBatch();
         vector<size_t> batch2 = helper.getSecondCalculatedBatch();
